@@ -34,10 +34,11 @@ const Draw = () => {
   const prevCard = drawCardsHistory[drawCardsHistory.length - 2 - goBackStep];
   const currentCard =
     drawCardsHistory[drawCardsHistory.length - 1 - goBackStep];
-
-  useEffect(() => {
-    dispatch(shuffleAction.shuffleRequest());
-  }, [dispatch]);
+  console.log({ deckInfo });
+  console.log({ drawCardsInfo });
+  // useEffect(() => {
+  //   dispatch(shuffleAction.shuffleRequest());
+  // }, [dispatch]);
 
   const handleShuffle = () => {
     if (!drawEnd) {
@@ -56,50 +57,66 @@ const Draw = () => {
     setGoBackStep(goBackStep - 1);
   };
   return (
-    <DrawContainer>
-      <Text>
-        <h3>
-          {deckResponseSuccess
-            ? "Deck Id : " + deckInfo?.deck_id
-            : deckErr + ": Note - Dummy Data!"}
-        </h3>
-      </Text>
-      <Text>
-        <h3>
-          {matchSnapValue ? "SNAP VALUE!" : matchSnapSuit ? "SNAP SUIT!" : ""}
-        </h3>
-      </Text>
-      <CardContainer>
-        {goBackStep < drawCardsHistory.length - 1 && (
-          <FontAwesomeIcon icon={faChevronCircleLeft} onClick={goBackHandle} />
+    <>
+      <h3>Test</h3>
+      <DrawContainer>
+        <Text>
+          <h3>
+            {deckResponseSuccess
+              ? "Deck Id : " + deckInfo?.deck_id
+              : deckErr + ": Note - Dummy Data!"}
+          </h3>
+        </Text>
+        <Text>
+          <h3>
+            {matchSnapValue ? "SNAP VALUE!" : matchSnapSuit ? "SNAP SUIT!" : ""}
+          </h3>
+        </Text>
+        <CardContainer>
+          {goBackStep < drawCardsHistory.length - 1 && (
+            <FontAwesomeIcon
+              icon={faChevronCircleLeft}
+              onClick={goBackHandle}
+            />
+          )}
+          <Card {...prevCard} />
+          <Card {...currentCard} />
+          {goBackStep > 0 && (
+            <FontAwesomeIcon
+              icon={faChevronCircleRight}
+              onClick={forwardHandle}
+            />
+          )}
+        </CardContainer>
+        {drawEnd ? (
+          <>
+            <Text>
+              <h3>VALUE MATCHES: {snapSuitCount ?? 0}</h3>
+            </Text>
+            <Text>
+              <h3>SUIT MATCHES: {snapValueCount ?? 0}</h3>
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text>
+              <h3 data-testid="remaining-draw">
+                {drawCardsInfo.remaining ?? 0} cards remaining of 52
+              </h3>
+            </Text>
+            <DrawBtn
+              className="draw-btn"
+              data-testid="draw-btn"
+              onClick={handleShuffle}
+            >
+              {" "}
+              Draw card
+            </DrawBtn>
+          </>
         )}
-        <Card {...prevCard} />
-        <Card {...currentCard} />
-        {goBackStep > 0 && (
-          <FontAwesomeIcon
-            icon={faChevronCircleRight}
-            onClick={forwardHandle}
-          />
-        )}
-      </CardContainer>
-      {drawEnd ? (
-        <>
-          <Text>
-            <h3>VALUE MATCHES: {snapSuitCount ?? 0}</h3>
-          </Text>
-          <Text>
-            <h3>SUIT MATCHES: {snapValueCount ?? 0}</h3>
-          </Text>
-        </>
-      ) : (
-        <>
-          <Text>
-            <h3>{drawCardsInfo.remaining ?? 0} cards remaining of 52</h3>
-          </Text>
-          <DrawBtn onClick={handleShuffle}> Draw card</DrawBtn>
-        </>
-      )}
-    </DrawContainer>
+      </DrawContainer>
+      <h3>Test</h3>
+    </>
   );
 };
 
